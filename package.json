@@ -1,0 +1,23 @@
+{
+  "name": "war-of-heroes-game-server",
+  "version": "1.0.0",
+  "description": "A TypeScript-based server for handling real-time battles in War of Heroes",
+  "main": "server.ts",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshoxe/war-of-heroes-game-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joshoxe/war-of-heroes-game-server/issues"
+  },
+  "homepage": "https://github.com/joshoxe/war-of-heroes-game-server#readme",
+  "dependencies": {
+    "@types/socket.io": "^3.0.2",
+    "socket.io": "^4.1.2"
+  }
+}
