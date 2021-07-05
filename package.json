@@ -4,7 +4,9 @@
   "description": "A TypeScript-based server for handling real-time battles in War of Heroes",
   "main": "server.ts",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
   "repository": {
     "type": "git",
