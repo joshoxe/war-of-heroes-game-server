@@ -6,7 +6,7 @@
   "scripts": {
     "test": "test",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/main.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/joshoxe/war-of-heroes-game-server#readme",
   "dependencies": {
     "@types/socket.io": "^3.0.2",
+    "guid-typescript": "^1.0.9",
     "socket.io": "^4.1.2"
   }
 }
