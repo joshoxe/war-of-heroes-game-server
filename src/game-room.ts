@@ -13,8 +13,6 @@ export class GameRoom {
     }
 
     isRoomAvailable(): boolean {
-        console.log(`Checking availability for room ${this.name} - users: ${this.users.length}`);
-        console.log(this.users.length < 2);
         return this.users.length < 2;
     }
 
