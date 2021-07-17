@@ -21,7 +21,6 @@ export class MatchmakingListener implements GameEventListener {
   matchmakingHandler(user: User, gameRoom: GameRoom, args: any[]): void {
       console.log("matchmaking: received command");
       if (args.length != 2) {
-          console.log(args);
           user.socket.emit('message', 'matchmaking: Incorrect arguments');
           return;
       }
@@ -44,8 +43,8 @@ export class MatchmakingListener implements GameEventListener {
 
       // Is this room ready to play?
       if (gameRoom.users.length == 2) {
-          console.log('Sending ready event');
-          gameRoom.socket.emit('ready', `${gameRoom.users[0].name} vs ${gameRoom.users[1].name}`);
+          console.log(`Sending ready event to room ${gameRoom.name}`);
+          gameRoom.socket.emit('ready');
       }
   }
 }
