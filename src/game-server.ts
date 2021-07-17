@@ -27,7 +27,6 @@ export class GameServer {
     io.on("connection", (socket: Socket) => {
       console.log("Handling a new connection");
       const user = new User(socket);
-      const room = this.getAvailableRoom();
       const gameRoom = this.getAvailableRoom() ?? this.createNewRoom();
       socket.join(gameRoom.name);
       gameRoom.addUser(user);
