@@ -64,16 +64,4 @@ export class GameServer {
 
     return availableRoom;
   }
-
-  findUserRoom(socket: Socket): GameRoom {
-    this.rooms.forEach(room => {
-      room.users.forEach(user => {
-        if (user.socket === socket) {
-          return room;
-        }
-      });
-    });
-
-    return null;
-  }
 }
