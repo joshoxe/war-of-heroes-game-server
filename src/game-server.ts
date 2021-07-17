@@ -42,18 +42,18 @@ export class GameServer {
     });
   }
 
-  createNewRoom(): GameRoom {
+  private createNewRoom(): GameRoom {
     const gameRoom = new GameRoom();
     this.rooms.push(gameRoom);
 
     return gameRoom;
   }
 
-  createHandlers(): void {
+  private createHandlers(): void {
     this.eventHandler.subscribe(new MatchmakingListener());
   }
 
-  getAvailableRoom(): GameRoom {
+  private getAvailableRoom(): GameRoom {
     var availableRoom: GameRoom = null;
 
     this.rooms.forEach((room) => {
