@@ -2,21 +2,13 @@ import { User } from "../user";
 import { GameRoom } from "../game-room";
 import { GameEventListener } from "./game-event-listener";
 
-export class MatchmakingListener implements GameEventListener {
+export class MatchmakingListener extends GameEventListener {
   eventHandlers: Handler[] = [
     {
       event: "matchmaking",
       handler: this.matchmakingHandler,
     },
   ];
-
-  execute(user: User, gameRoom: GameRoom, event: any, args: any[]): void {
-    this.eventHandlers.forEach((eventHandler) => {
-      if (event === eventHandler.event) {
-        eventHandler.handler(user, gameRoom, args);
-      }
-    });
-  }
 
   matchmakingHandler(user: User, gameRoom: GameRoom, args: any[]): void {
       console.log("matchmaking: received command");
