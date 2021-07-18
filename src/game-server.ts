@@ -25,6 +25,7 @@ export class GameServer {
     httpServer.listen(port);
 
     io.on("connection", (socket: Socket) => {
+      /* Handle a new incoming connection */
       console.log("Handling a new connection");
       const user = new User(socket);
       const gameRoom = this.getAvailableRoom() ?? this.createNewRoom();
@@ -36,6 +37,7 @@ export class GameServer {
       // Send the client a matchmaking request
       socket.emit('matchmaking');
 
+      /* Send events to an event hanlder */
       socket.onAny((eventType, args) => {
         this.eventHandler.notify(user, gameRoom, eventType, args);
       });
