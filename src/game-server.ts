@@ -1,7 +1,9 @@
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 import { GameRoom } from "./game-room";
+import { DisconnectListener } from "./handlers/disconnect-listener";
 import { EventHandler } from "./handlers/event-handler";
+import { GameListener } from "./handlers/game-listener";
 import { MatchmakingListener } from "./handlers/matchmaking-listener";
 import { User } from "./user";
 
@@ -53,6 +55,8 @@ export class GameServer {
 
   private createHandlers(): void {
     this.eventHandler.subscribe(new MatchmakingListener());
+    this.eventHandler.subscribe(new DisconnectListener());
+    this.eventHandler.subscribe(new GameListener());
   }
 
   private getAvailableRoom(): GameRoom {
