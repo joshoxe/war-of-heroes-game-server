@@ -46,5 +46,9 @@ resource "azurerm_app_service" "frontend_app_service" {
         windows_fx_version = "DOTNETCORE|3.1"
         default_documents = ["main.js"]
         use_32_bit_worker_process = true
+        websockets_enabled = true
+        cors {
+        allowed_origins = ["*"]
+        }
     }
 }
