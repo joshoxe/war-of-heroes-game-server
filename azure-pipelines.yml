@@ -21,3 +21,10 @@ stages:
             inputs:
               command: 'custom'
               customCommand: 'build'
+          - task: ArchiveFiles@2
+            inputs:
+              rootFolderOrFile: '$(Build.BinariesDirectory)/dist'
+              includeRootFolder: true
+              archiveType: 'zip'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+              replaceExistingArchive: true
