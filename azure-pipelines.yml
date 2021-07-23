@@ -62,9 +62,9 @@ stages:
         - task: AzureWebApp@1
           displayName: 'Azure Web App Deploy: nodejs-cicd-16353'
           inputs:
-              azureSubscription: warOfHeroes
-              appType: webAppLinux
-              appName: warOfHeroesServer
+              azureSubscription: 'warOfHeroes'
+              appType: 'webAppLinux'
+              appName: 'warOfHeroesServer'
               runtimeStack: 'NODE|10.10'
               package: '$(System.DefaultWorkingDirectory)/**/*.zip'
               startUpCommand: 'npm run start'
