@@ -16,19 +16,18 @@ stages:
               versionSpec: '6.x'
               checkLatest: true
           - task: Npm@1
+            displayName: npm install
             inputs:
               command: 'install'
-          - task: Npm@1
-            inputs:
-              command: 'custom'
-              customCommand: 'build'
           - task: Bash@3
+            displayName: build server
             inputs:
               targetType: 'inline'
               script: |
-                # Write your commands here
+                tsc
                 ls
           - task: ArchiveFiles@2
+            displayName: archive server build
             inputs:
               rootFolderOrFile: 'dist'
               includeRootFolder: true
