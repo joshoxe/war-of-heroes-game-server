@@ -41,3 +41,30 @@ stages:
               PathtoPublish: '$(Build.ArtifactStagingDirectory)'
               ArtifactName: 'drop'
               publishLocation: 'Container'
+              
+  - stage: Deploy
+    jobs:
+      - job: DeployServer
+        steps:
+        - script: |
+            terraform init
+            terraform plan
+            terraform apply -auto-approve
+          workingDirectory: "$(System.DefaultWorkingDirectory)/Deployment"
+          env:
+            ARM_SUBSCRIPTION_ID: $(SUBSCRIPTION-ID)
+            ARM_TENANT_ID: $(TERRAFORM-TENANT-ID)      
+            ARM_ACCESS_KEY: $(TF-ACCESS-KEY)        
+            ARM_CLIENT_ID: $(TERRAFORM-CLIENT-ID)
+            ARM_CLIENT_SECRET: $(TERRAFORM-CLIENT-SECRET)
+        - task: DownloadPipelineArtifact@2
+          inputs:
+              buildType: "current"
+              artifactName: "drop"
+              targetPath: "$(System.DefaultWorkingDirectory)"
+        - task: AzureWebApp@1
+          inputs:
+            azureSubscription: 'warOfHeroes'
+            appType: 'webAppLinux'
+            appName: 'warOfHeroesServer'
+            package: '$(System.DefaultWorkingDirectory)/**/*.zip'
