@@ -12,6 +12,7 @@ stages:
         steps:
           - checkout: self
           - task: NodeTool@0
+            displayName: install node
             inputs:
               versionSpec: '6.x'
               checkLatest: true
@@ -34,3 +35,9 @@ stages:
               archiveType: 'zip'
               archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
               replaceExistingArchive: true
+          - task: PublishBuildArtifacts@1
+            displayName: publish artifact
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+              ArtifactName: 'drop'
+              publishLocation: 'Container'
