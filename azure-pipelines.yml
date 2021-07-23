@@ -19,21 +19,15 @@ stages:
             inputs:
               versionSpec: '6.x'
               checkLatest: true
-          - task: Npm@1
-            displayName: npm install
-            inputs:
-              command: 'install'
-          - task: Bash@3
-            displayName: build server
-            inputs:
-              targetType: 'inline'
-              script: |
-                tsc
-                ls
+          - script: |
+              npm install
+              npm run build --if-present
+              npm run test --if-present
+            displayName: 'npm install, build and test'
           - task: ArchiveFiles@2
             displayName: archive server build
             inputs:
-              rootFolderOrFile: 'dist'
+              rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
               includeRootFolder: false
               archiveType: 'zip'
               archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
@@ -65,9 +59,13 @@ stages:
               buildType: "current"
               artifactName: "drop"
               targetPath: "$(System.DefaultWorkingDirectory)"
+              
         - task: AzureWebApp@1
+          displayName: 'Azure Web App Deploy: nodejs-cicd-16353'
           inputs:
-            azureSubscription: 'warOfHeroes'
-            appType: 'webAppLinux'
-            appName: 'warOfHeroesServer'
-            package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+              azureSubscription: warOfHeroes
+              appType: webAppLinux
+              appName: warOfHeroesServer
+              runtimeStack: 'NODE|10.10'
+              package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+              startUpCommand: 'npm run start'
