@@ -11,7 +11,7 @@ export class GameServer {
   rooms: GameRoom[] = [];
   eventHandler: EventHandler;
 
-  listen(port: number): void {
+  listen(port: string | number): void {
     this.eventHandler = new EventHandler();
     this.createHandlers();
 
