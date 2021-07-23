@@ -31,13 +31,13 @@ stages:
             displayName: archive server build
             inputs:
               rootFolderOrFile: 'dist'
-              includeRootFolder: true
+              includeRootFolder: false
               archiveType: 'zip'
               archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
               replaceExistingArchive: true
           - task: PublishBuildArtifacts@1
             displayName: publish artifact
             inputs:
-              PathtoPublish: '$(Build.ArtifactStagingDirectory)/dist'
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
               ArtifactName: 'drop'
               publishLocation: 'Container'
