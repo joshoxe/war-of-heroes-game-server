@@ -10,6 +10,8 @@ import { User } from "./user";
 export class GameServer {
   rooms: GameRoom[] = [];
   eventHandler: EventHandler;
+  fs = require('fs');
+  log_file = this.fs.createWriteStream('debug.log', {flags : 'w'});
 
   listen(port: string | number): void {
     this.eventHandler = new EventHandler();
@@ -23,17 +25,20 @@ export class GameServer {
     });
 
 
+    this.log_file.write(`Listening on port ${port}...`);
     console.log(`Listening on port ${port}...`);
     httpServer.listen(port);
 
     io.on("connection", (socket: Socket) => {
       /* Handle a new incoming connection */
       console.log("Handling a new connection");
+      this.log_file.write("Handling a new connection");
       const user = new User(socket);
       const gameRoom = this.getAvailableRoom() ?? this.createNewRoom();
       socket.join(gameRoom.name);
       gameRoom.addUser(user);
       gameRoom.socket = io.to(gameRoom.name);
+      this.log_file.write(`Added new connection to game room ${gameRoom.name}`);
       console.log(`Added new connection to game room ${gameRoom.name}`);
 
       // Send the client a matchmaking request
