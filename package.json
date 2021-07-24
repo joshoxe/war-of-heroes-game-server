@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/joshoxe/war-of-heroes-game-server#readme",
   "dependencies": {
+    "@types/express": "^4.17.13",
     "@types/socket.io": "^3.0.2",
+    "express": "^4.17.1",
     "guid-typescript": "^1.0.9",
     "socket.io": "^4.1.2"
   }

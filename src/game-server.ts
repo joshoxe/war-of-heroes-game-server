@@ -1,5 +1,6 @@
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
+import  { Express } from "express";
 import { GameRoom } from "./game-room";
 import { DisconnectListener } from "./handlers/disconnect-listener";
 import { EventHandler } from "./handlers/event-handler";
@@ -12,12 +13,13 @@ export class GameServer {
   eventHandler: EventHandler;
   fs = require('fs');
   log_file = this.fs.createWriteStream('debug.log', {flags : 'w'});
+  express = require('express');
 
   listen(port: string | number): void {
     this.eventHandler = new EventHandler();
     this.createHandlers();
 
-    const httpServer = createServer();
+    const httpServer = createServer(this.express());
     const io = new Server(httpServer, {
       cors: {
         origin: "*",
