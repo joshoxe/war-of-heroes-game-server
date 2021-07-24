@@ -46,6 +46,7 @@ stages:
             terraform init
             terraform plan
             terraform apply -auto-approve
+          displayName: 'terraform init, plan, apply'
           workingDirectory: "$(System.DefaultWorkingDirectory)/Deployment"
           env:
             ARM_SUBSCRIPTION_ID: $(SUBSCRIPTION-ID)
