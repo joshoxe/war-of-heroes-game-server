@@ -4,7 +4,7 @@ import * as https from 'https';
 import { User } from '../user';
 
 export class UserApi {
-    userApiUrl: string = "https://localhost:44328";
+    userApiUrl: string = "https://warofheroesusers.azurewebsites.net";
 
     recordWin(user: User, coinsForWin: number) {
         const headers = {
