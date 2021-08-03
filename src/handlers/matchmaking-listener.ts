@@ -12,15 +12,22 @@ export class MatchmakingListener extends GameEventListener {
 
   matchmakingHandler(user: User, gameRoom: GameRoom, args: any[]): void {
     console.log("matchmaking: received command");
-    // Expecting an event of -> matchmaking: username, jwt, access token
-    if (args.length != 3) {
+    // Expecting an event of -> matchmaking: id, username, jwt, access token
+    if (args.length != 4) {
+      user.socket.emit("message", args);
       user.socket.emit("message", "matchmaking: Incorrect arguments");
       return;
     }
 
-    const userName: string = args[0];
-    const jwtToken: string = args[1];
-    const accessToken: string = args[2];
+    const id: number = args[0]
+    const userName: string = args[1];
+    const jwtToken: string = args[2];
+    const accessToken: string = args[3];
+
+    if (id === null || id === undefined) {
+      user.socket.emit("message", "matchmaking: Unable to set ID");
+      return;
+    }
 
     if (userName === null || userName === undefined) {
       user.socket.emit("message", "matchmaking: Unable to set username");
@@ -37,6 +44,7 @@ export class MatchmakingListener extends GameEventListener {
       return;
     }
 
+    user.id = id;
     user.name = userName;
     user.jwtToken = jwtToken;
     user.accessToken = accessToken;
