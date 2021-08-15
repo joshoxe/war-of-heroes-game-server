@@ -1,6 +1,8 @@
 import { User } from "../user";
 import { GameRoom } from "../game-room";
 import { GameEventListener } from "./game-event-listener";
+import { HeroApi } from "../API/hero-api";
+import { Hero } from "../hero";
 
 export class MatchmakingListener extends GameEventListener {
   eventHandlers: Handler[] = [
@@ -8,12 +10,16 @@ export class MatchmakingListener extends GameEventListener {
       event: "matchmaking",
       handler: this.matchmakingHandler,
     },
+    { 
+      event: "myDeck",
+      handler: this.sendUserDeck
+    }
   ];
 
-  matchmakingHandler(user: User, gameRoom: GameRoom, args: any[]): void {
+  async matchmakingHandler(user: User, gameRoom: GameRoom, args: any[]): Promise<void> {
     console.log("matchmaking: received command");
-    // Expecting an event of -> matchmaking: id, username, jwt, access token
-    if (args.length != 4) {
+    // Expecting an event of -> matchmaking: id, username, deck, jwt, access token
+    if (args.length != 5) {
       user.socket.emit("message", args);
       user.socket.emit("message", "matchmaking: Incorrect arguments");
       return;
@@ -21,8 +27,9 @@ export class MatchmakingListener extends GameEventListener {
 
     const id: number = args[0]
     const userName: string = args[1];
-    const jwtToken: string = args[2];
-    const accessToken: string = args[3];
+    const deck: number[] = args[2]
+    const jwtToken: string = args[3];
+    const accessToken: string = args[4];
 
     if (id === null || id === undefined) {
       user.socket.emit("message", "matchmaking: Unable to set ID");
@@ -30,6 +37,11 @@ export class MatchmakingListener extends GameEventListener {
     }
 
     if (userName === null || userName === undefined) {
+      user.socket.emit("message", "matchmaking: Unable to set username");
+      return;
+    }
+
+    if (deck === null || deck === undefined) {
       user.socket.emit("message", "matchmaking: Unable to set username");
       return;
     }
@@ -49,10 +61,23 @@ export class MatchmakingListener extends GameEventListener {
     user.jwtToken = jwtToken;
     user.accessToken = accessToken;
 
+    // Retrieve hero objects from deck IDs
+    const heroApi = new HeroApi();
+    await heroApi.getHeroes(user, deck).then((deckHeroes: Hero[]) => {
+      user.deck = deckHeroes
+    });
+
     // Is this room ready to play?
     if (gameRoom.users.length == 2) {
       console.log(`Sending ready event to room ${gameRoom.name}`);
-      gameRoom.socket.emit("ready");
+      // Tell the client the room is ready, and send their deck in Hero form
+      gameRoom.socket.emit("ready", user.deck);
     }
+  }
+
+  sendUserDeck(user: User, gameRoom: GameRoom, args: any[]) {
+    // Send the rest of the clients the deck in Hero form
+    const userDeck: Hero[] = args;
+    user.socket.to(gameRoom.name).emit('opponentDeck', userDeck);
   }
 }
