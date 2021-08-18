@@ -4,7 +4,7 @@ import { Hero } from "./hero";
 export class User {
     id: number;
     name: string;
-    deck: Hero[];
+    inventory: Hero[];
     socket: Socket;
     jwtToken: string;
     accessToken: string;
