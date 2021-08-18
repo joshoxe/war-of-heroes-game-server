@@ -7,9 +7,10 @@ import { EventHandler } from "./handlers/event-handler";
 import { GameListener } from "./handlers/game-listener";
 import { MatchmakingListener } from "./handlers/matchmaking-listener";
 import { User } from "./user";
+import { Game } from "./game";
 
 export class GameServer {
-  rooms: GameRoom[] = [];
+  games: Game[] = [];
   eventHandler: EventHandler;
   fs = require('fs');
   log_file = this.fs.createWriteStream('debug.log', {flags : 'w'});
@@ -36,28 +37,30 @@ export class GameServer {
       console.log("Handling a new connection");
       this.log_file.write("Handling a new connection");
       const user = new User(socket);
-      const gameRoom = this.getAvailableRoom() ?? this.createNewRoom();
-      socket.join(gameRoom.name);
-      gameRoom.addUser(user);
-      gameRoom.socket = io.to(gameRoom.name);
-      this.log_file.write(`Added new connection to game room ${gameRoom.name}`);
-      console.log(`Added new connection to game room ${gameRoom.name}`);
+      const game = this.getAvailableGame() ?? this.createNewGame();
+      socket.join(game.gameRoom.name);
+      game.gameRoom.addUser(user);
+      game.gameRoom.socket = io.to(game.gameRoom.name);
+      this.log_file.write(`Added new connection to game room ${game.gameRoom.name}`);
+      console.log(`Added new connection to game room ${game.gameRoom.name}`);
+
 
       // Send the client a matchmaking request
       socket.emit('matchmaking');
 
       /* Send events to an event hanlder */
       socket.onAny((eventType, args) => {
-        this.eventHandler.notify(user, gameRoom, eventType, args);
+        this.eventHandler.notify(user, game, eventType, args);
       });
     });
   }
 
-  private createNewRoom(): GameRoom {
+  private createNewGame(): Game {
     const gameRoom = new GameRoom();
-    this.rooms.push(gameRoom);
+    const game = new Game(gameRoom);
+    this.games.push(game);
 
-    return gameRoom;
+    return game;
   }
 
   private createHandlers(): void {
@@ -66,15 +69,15 @@ export class GameServer {
     this.eventHandler.subscribe(new GameListener());
   }
 
-  private getAvailableRoom(): GameRoom {
-    var availableRoom: GameRoom = null;
+  private getAvailableGame(): Game {
+    var availableGame: Game = null;
 
-    this.rooms.forEach((room) => {
-      if (room.isRoomAvailable()) {
-        availableRoom = room;
+    this.games.forEach((game) => {
+      if (game.gameRoom.isRoomAvailable()) {
+        availableGame = game;
       }
     });
 
-    return availableRoom;
+    return availableGame;
   }
 }

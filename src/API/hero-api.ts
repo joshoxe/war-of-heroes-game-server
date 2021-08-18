@@ -4,7 +4,7 @@ import { Hero } from "../hero";
 import { User } from "../user";
 
 export class HeroApi {
-    heroApiUrl: string = "https://warofheroesheroes.azurewebsites.net";
+    heroApiUrl: string = "https://localhost:44398";
 
     async getHeroes(user: User, deck: number[]): Promise<Hero[]> {
         const headers = {
