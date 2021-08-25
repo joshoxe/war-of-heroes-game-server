@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as https from 'https';
-import { Hero } from "../hero";
+import { Hero } from "../hero/hero";
 import { User } from "../user";
 
 export class HeroApi {
