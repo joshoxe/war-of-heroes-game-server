@@ -1,7 +1,8 @@
+import { Ability } from "./ability";
+
 export interface Hero {
     id: number;
     name: string;
-    attackDamage: number;
-    ultimateAttackDamage: number;
+    ability: Ability;
     description: string;
 }
