@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { Hero } from "./hero";
+import { Hero } from "./hero/hero";
 
 export class Player {
   name: string;
@@ -7,7 +7,7 @@ export class Player {
   inventoryIds: number[];
   inventory: Hero[];
   discardPile: Hero[] = [];
-  currentHand: Hero[] =[];
+  currentHand: Hero[] = [];
   socket: Socket;
 
   constructor(name: string, inventory: Hero[], socket: Socket) {
@@ -17,25 +17,38 @@ export class Player {
   }
 
   drawNewHand(): Hero[] {
-    if (this.inventory.length < 5 && this.discardPile.length > 0) {
-      return;
-    }
-    
     if (this.currentHand.length > 0) {
-        return;
+      this.discardPile = this.discardPile.concat(this.currentHand);
+      this.currentHand = [];
+    }
+
+    if (this.inventory.length < 5 && this.discardPile.length > 0) {
+      this.inventory = this.refreshInventory();
+      this.discardPile = [];
     }
 
     var newHand: Hero[] = [];
 
     const handSize = 5;
-    for (let i = 0; i <= handSize; i++) {
-        const randomHeroIndex = Math.floor(Math.random() * this.inventory.length);
-        newHand.push(this.inventory[randomHeroIndex]);
-        this.removeFromInventory(randomHeroIndex);
-   }
+    for (let i = 0; i < handSize; i++) {
+      const randomHeroIndex = Math.floor(Math.random() * this.inventory.length);
+      newHand.push(this.inventory[randomHeroIndex]);
+      this.removeFromInventory(randomHeroIndex);
+    }
 
-   this.currentHand = newHand;
-   return this.currentHand;
+    console.log(`Player's inventory after draw: ${this.inventory}`);
+
+    this.currentHand = newHand;
+    return this.currentHand;
+  }
+
+  removeFromHand(hero: Hero) {
+    for (let i = 0; i < this.currentHand.length; i++) {
+      const handHero = this.currentHand[i];
+      if (handHero.id === hero.id) {
+        this.currentHand.splice(i, 1);
+      }
+    }
   }
 
   removeFromInventory(index: number) {
@@ -45,13 +58,13 @@ export class Player {
   }
 
   refreshInventory(): Hero[] {
-      var newInventory = this.inventory.concat(this.discardPile);
-      var shuffledInventory = this.shuffle(newInventory);
-      return shuffledInventory;
+    var newInventory = this.inventory.concat(this.discardPile);
+    var shuffledInventory = this.shuffle(newInventory);
+    return shuffledInventory;
   }
 
   shuffle(heroes: Hero[]) {
-    var currentIndex = heroes.length
+    var currentIndex = heroes.length;
     var randomIndex;
 
     // While there remain elements to shuffle...
@@ -61,10 +74,7 @@ export class Player {
       currentIndex--;
 
       // And swap it with the current element.
-      [heroes[currentIndex], heroes[randomIndex]] = [
-        heroes[randomIndex],
-        heroes[currentIndex],
-      ];
+      [heroes[currentIndex], heroes[randomIndex]] = [heroes[randomIndex], heroes[currentIndex]];
     }
 
     return heroes;
