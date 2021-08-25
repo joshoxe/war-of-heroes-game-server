@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { Hero } from "./hero";
+import { Hero } from "./hero/hero";
 
 export class User {
     id: number;

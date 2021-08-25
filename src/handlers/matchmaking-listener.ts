@@ -2,7 +2,7 @@ import { User } from "../user";
 import { GameRoom } from "../game-room";
 import { GameEventListener } from "./game-event-listener";
 import { HeroApi } from "../API/hero-api";
-import { Hero } from "../hero";
+import { Hero } from "../hero/hero";
 import { Player } from "../player";
 import { Game } from "../game";
 
